@@ -1,5 +1,8 @@
 package com.company;
 
-public enum  Message {
-    AVAILABLE,NOTAVAILABLE,
+import akka.actor.AbstractActor;
+
+public enum Message {
+    HI, HELLO, NO_GREETING, INSULT;
 }
+

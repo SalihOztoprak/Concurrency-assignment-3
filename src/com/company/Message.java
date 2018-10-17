@@ -1,4 +1,8 @@
 package com.company;
 
-public class Message {
+import akka.actor.AbstractActor;
+
+public enum Message {
+    HI, HELLO, NO_GREETING, INSULT;
 }
+

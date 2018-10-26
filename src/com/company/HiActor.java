@@ -17,9 +17,6 @@ public class HiActor extends AbstractActor {
         return receiveBuilder()
                 .match(Message.class, greeting -> {
                     switch (greeting) {
-                        case HI:
-                            System.out.println("Hello");
-                            break;
                         case HELLO:
                             System.out.println("Hello too");
                             break;

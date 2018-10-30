@@ -13,12 +13,11 @@ public class Tenant extends Person {
     }
 
     public Tenant(String name) {
-        super(name);
         customerService = system.actorOf(Props.create(CustomerService.class));
     }
 
     private void run(){
-        customerService.tell(Message.REQUEST_LOCATIONS,ActorRef.noSender());
+        customerService.tell(Message.REQUEST_LOCATIONS,customerService);
     }
 
     @Override
@@ -28,5 +27,9 @@ public class Tenant extends Person {
                 System.out.println("Reactie ontvangen");
             }
         }).build();
+    }
+
+    public enum Messages {
+        REQUEST_LOCATIONS
     }
 }

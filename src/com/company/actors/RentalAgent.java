@@ -6,13 +6,12 @@ import akka.actor.Props;
 public class RentalAgent extends Person {
     private ActorRef locationAgent;
 
-    private RentalAgent(String name, ActorRef partner) {
-        super(name);
-        locationAgent = partner;
+
+    private void run(){
     }
 
-    public static Props prop(ActorRef partner){
-        return Props.create(LocationAgent.class,partner);
+    public static Props prop(ActorRef partner) {
+        return Props.create(LocationAgent.class, partner);
     }
 
     @Override

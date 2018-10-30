@@ -1,37 +1,34 @@
 package com.company.actors;
 
 import akka.actor.ActorRef;
-import akka.actor.Props;
-import com.company.Message;
-
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CustomerService extends Person {
     private ActorRef tenant;
     private ActorRef rentalAgent;
 
-    private String[] locations = {
-            "Amsterdam",
-            "Rotterdam",
-            "Den Haag",
-            "Utrecht",
-            "Groningen",
-            "Eindhoven",
-            "Maastricht",
-            "Enschede"
-    };
+    private Map<String,LocationAgent> locationAgents = new HashMap<>();
 
-    public CustomerService(String name) {
-        super(name);
-        tenant = system.actorOf(Props.create(Tenant.class));
-        rentalAgent = system.actorOf(Props.create(RentalAgent.class));
+//            "Amsterdam", ,
+//            new LocationAgent("Frank", "Rotterdam", 10),
+//            new LocationAgent("Ruud", "Den Haag", 8),
+//            new LocationAgent("Gerralt", "Utrecht", 16),
+//            new LocationAgent("Salih", "Groningen", 12),
+//            new LocationAgent("Thomas", "Eindhoven", 27),
+//            new LocationAgent("Timothy", "Maastricht", 19),
+//            new LocationAgent("Tristan", "Enschede", 13)
+
+
+
+    private void run(){
     }
 
     public Receive createReceive() {
-        return receiveBuilder().match(Message.class, greeting -> {
+        return receiveBuilder().match(Tenant.Messages.class, greeting -> {
             switch (greeting) {
                 case REQUEST_LOCATIONS:
-                    System.out.println(Arrays.toString(locations));
+                    System.out.println("Locaties");
                     break;
                 default:
                     System.out.println("Sorry bra, ik niet begrijp.");

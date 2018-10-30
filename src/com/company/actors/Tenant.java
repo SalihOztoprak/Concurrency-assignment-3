@@ -2,7 +2,7 @@ package com.company.actors;
 
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import com.company.Message;
+import com.company.testing.Message;
 
 public class Tenant extends Person {
     protected ActorRef customerService;

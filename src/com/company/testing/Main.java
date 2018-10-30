@@ -1,4 +1,4 @@
-package com.company;
+package com.company.testing;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;

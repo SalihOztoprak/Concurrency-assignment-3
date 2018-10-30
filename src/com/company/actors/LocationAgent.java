@@ -1,6 +1,6 @@
 package com.company.actors;
 
-import com.company.Message;
+import com.company.testing.Message;
 
 public class LocationAgent extends Person {
     private String city;

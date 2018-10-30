@@ -1,7 +1,6 @@
-package com.company;
+package com.company.testing;
 
 import akka.actor.AbstractActor;
-import com.company.HiActor;
 
 public class HiActor extends AbstractActor {
     @Override

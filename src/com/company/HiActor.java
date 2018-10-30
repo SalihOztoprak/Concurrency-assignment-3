@@ -1,6 +1,7 @@
 package com.company;
 
 import akka.actor.AbstractActor;
+import com.company.HiActor;
 
 public class HiActor extends AbstractActor {
     @Override
@@ -16,20 +17,17 @@ public class HiActor extends AbstractActor {
         return receiveBuilder()
                 .match(Message.class, greeting -> {
                     switch (greeting) {
-                        case CANIRENT:
-                            System.out.println("Is there a room available?");
+                        case HELLO:
+                            System.out.println("Hello too");
                             break;
-                        case AVAILABLE:
-                            System.out.println("There is a room available");
+                        case NO_GREETING:
+                            System.out.println("HI");
                             break;
-                        case UNAVAILABLE:
-                            System.out.println("There are no rooms available");
-                            break;
-                        case RENTED:
-                            System.out.println("I would like to rent it ");
+                        case INSULT:
+                            System.out.println("Thank You");
                             break;
                         default:
-                            System.out.println("Sorry I dont get it, please try again! ");
+                            System.out.println("Sorry ? ");
                     }
                 })
                 .match(String.class, System.out::println).build();

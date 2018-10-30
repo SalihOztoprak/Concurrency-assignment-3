@@ -6,7 +6,8 @@ import akka.actor.Props;
 public class RentalAgent extends Person {
     private ActorRef locationAgent;
 
-    private RentalAgent(ActorRef partner) {
+    private RentalAgent(String name, ActorRef partner) {
+        super(name);
         locationAgent = partner;
     }
 

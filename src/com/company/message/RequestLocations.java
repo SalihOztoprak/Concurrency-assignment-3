@@ -1,4 +1,4 @@
 package com.company.message;
 
-public class Message {
+public class RequestLocations {
 }

@@ -1,25 +1,19 @@
 package com.company.actors;
 
+import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
-import com.company.message.Message;
 
-public class LocationAgent extends Person {
+public class LocationAgent extends AbstractLoggingActor {
     private String city;
     private int availableRooms;
-    private ActorRef ref;
 
-
+    public LocationAgent(String city, int availableRooms) {
+        this.city = city;
+        this.availableRooms = availableRooms;
+    }
 
     @Override
     public Receive createReceive() {
-        return receiveBuilder()
-                .match(Message.class, message -> {
-                    System.out.println("Received String message: {}" + message);
-                }).matchAny(o -> System.out.println("received unknown message"))
-                .build();
-    }
-
-    public ActorRef getRef() {
-        return ref;
+        return null;
     }
 }

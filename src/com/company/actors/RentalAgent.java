@@ -1,10 +1,9 @@
 package com.company.actors;
 
-import akka.actor.AbstractActor;
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import com.company.message.RequestLocations;
+import com.company.message.*;
 
 import java.util.HashMap;
 
@@ -28,8 +27,15 @@ public class RentalAgent extends AbstractLoggingActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(RequestLocations.class, message -> {
-                    log().info("Received message: " + message);
+                .match(RequestReservation.class, message -> {
+                    actorRefMap.get(message.getLocation()).tell(new RequestRooms(getSender(), message.getRooms()), getSelf());
+                })
+                .match(ResponseRooms.class, message -> {
+                    boolean bool = false;
+                    if (message.getAvailableRooms() >= message.getRequestedRooms()) {
+                        bool = true;
+                    }
+                    message.getSender().tell(new ResponseReservation(bool, getSender()), getSelf());
                 })
                 .build();
     }

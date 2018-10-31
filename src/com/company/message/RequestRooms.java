@@ -1,13 +1,21 @@
 package com.company.message;
 
-public class RequestRooms {
-    private String location;
+import akka.actor.ActorRef;
 
-    public RequestRooms(String location) {
-        this.location = location;
+public class RequestRooms {
+    private ActorRef sender;
+    private int requestedRooms;
+
+    public RequestRooms(ActorRef sender, int requestedRooms) {
+        this.sender = sender;
+        this.requestedRooms = requestedRooms;
     }
 
-    public String getLocation() {
-        return location;
+    public ActorRef getSender() {
+        return sender;
+    }
+
+    public int getRequestedRooms() {
+        return requestedRooms;
     }
 }

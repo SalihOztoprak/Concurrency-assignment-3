@@ -1,9 +1,8 @@
 package com.company.actors;
 
 import akka.actor.AbstractLoggingActor;
-import akka.actor.ActorRef;
-import com.company.message.RequestLocations;
-import com.company.message.ResponseLocations;
+import com.company.message.RequestRooms;
+import com.company.message.ResponseRooms;
 
 import java.util.Random;
 
@@ -19,8 +18,8 @@ public class LocationAgent extends AbstractLoggingActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(RequestLocations.class, message -> {
-
+                .match(RequestRooms.class, message -> {
+                    getSender().tell(new ResponseRooms(message.getSender(), availableRooms, message.getRequestedRooms()),getSelf());
                 })
                 .build();
     }

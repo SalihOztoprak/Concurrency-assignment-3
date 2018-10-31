@@ -5,9 +5,12 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import com.company.message.RequestLocations;
+import com.company.message.RequestReservation;
 import com.company.message.ResponseLocations;
+import com.company.message.ResponseReservation;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class Tenant extends AbstractLoggingActor {
     private ActorRef customerService;
@@ -34,8 +37,16 @@ public class Tenant extends AbstractLoggingActor {
         return receiveBuilder()
                 .match(ResponseLocations.class, msg -> {
                     log().info(Arrays.toString(msg.getLocations()));
-//                    System.out.println("Hallo ik ben een tenant, dit zijn mn locaties: " + Arrays.toString(msg.getLocations()));
+                    getSender().tell(new RequestReservation(getRandomLocation(msg.getLocations()),new Random().nextInt(3)+1),getSelf());
+                    log().info("I've sent a request to " + getSender());
+                })
+                .match(ResponseReservation.class, msg -> {
+                    log().info(msg.toString());
                 })
                 .build();
+    }
+
+    private String getRandomLocation(String[] locations) {
+        return locations[new Random().nextInt(locations.length)];
     }
 }

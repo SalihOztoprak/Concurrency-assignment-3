@@ -6,19 +6,25 @@ import akka.routing.RoundRobinRoutingLogic;
 import akka.routing.Routee;
 import akka.routing.Router;
 import com.company.message.RequestLocations;
+import com.company.message.ResponseLocations;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CustomerService extends AbstractLoggingActor {
+    private HashMap<String, ActorRef> actorRefMap;
     private Router router;
 
     @Override
     public void preStart() throws Exception {
         super.preStart();
+
+        createList();
+
         List<Routee> routees = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            ActorRef r = getContext().actorOf(RentalAgent.prop(getSelf()));
+            ActorRef r = getContext().actorOf(RentalAgent.prop(actorRefMap));
             getContext().watch(r);
             routees.add(new ActorRefRoutee(r));
         }
@@ -29,14 +35,31 @@ public class CustomerService extends AbstractLoggingActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(RequestLocations.class, message -> {
+                    log().info("Routing message " + message);
                     router.route(message, getSender());
-                })
-                .match(Terminated.class, message -> {
-                    router = router.removeRoutee(message.actor());
-                    ActorRef r = getContext().actorOf(Props.create(RentalAgent.class));
-                    getContext().watch(r);
-                    router = router.addRoutee(new ActorRefRoutee(r));
+                    String[] locations = getLocations();
+                    getSender().tell(new ResponseLocations(locations), getSelf());
                 })
                 .build();
+    }
+
+    private void createList() {
+        actorRefMap = new HashMap<>();
+        actorRefMap.put("Enschede", getContext().getSystem().actorOf(Props.create(LocationAgent.class, "Enschede")));
+        actorRefMap.put("Amsterdam", getContext().getSystem().actorOf(Props.create(LocationAgent.class, "Amsterdam")));
+        actorRefMap.put("Deventer", getContext().getSystem().actorOf(Props.create(LocationAgent.class, "Deventer")));
+        actorRefMap.put("Almelo", getContext().getSystem().actorOf(Props.create(LocationAgent.class, "Almelo")));
+        actorRefMap.put("Goor", getContext().getSystem().actorOf(Props.create(LocationAgent.class, "Goor")));
+    }
+
+    private String[] getLocations() {
+        List<String> list = new ArrayList<>(actorRefMap.keySet());
+
+        String[] locations = new String[list.size()];
+        for (int i = 0; i < locations.length; i++) {
+            locations[i] = list.get(i);
+        }
+
+        return locations;
     }
 }

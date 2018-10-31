@@ -2,8 +2,6 @@ package com.company.actors;
 
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Props;
 import com.company.message.RequestLocations;
 import com.company.message.RequestReservation;
 import com.company.message.ResponseLocations;
@@ -41,7 +39,7 @@ public class Tenant extends AbstractLoggingActor {
                     log().info("I've sent a request to " + getSender());
                 })
                 .match(ResponseReservation.class, msg -> {
-                    log().info(msg.toString());
+                    log().info("Can I get the room: " + msg.isSucces());
                 })
                 .build();
     }

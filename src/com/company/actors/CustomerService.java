@@ -45,7 +45,8 @@ public class CustomerService extends AbstractLoggingActor {
                     getSender().tell(new ResponseLocations(locations), getSelf());
                 })
                 .match(RequestReservation.class, message -> {
-                    routees.get(new Random().nextInt(5)).send(message, getSelf());
+                    router.route(message,getSelf());
+//                    routees.get(new Random().nextInt(5)).send(message, getSelf());
                 })
                 .match(ResponseReservation.class, msg -> {
                     msg.getSender().tell(msg,getSender());

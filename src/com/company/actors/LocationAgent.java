@@ -1,7 +1,7 @@
 package com.company.actors;
 
 import akka.actor.ActorRef;
-import com.company.Message;
+import com.company.message.Message;
 
 public class LocationAgent extends Person {
     private String city;

@@ -3,21 +3,15 @@ package com.company.message;
 import akka.actor.ActorRef;
 import com.company.Office;
 
-public class ResponseReservation {
+public class ResponseAddToQueue {
     private String location;
     private Office office;
-    private boolean succes;
     private ActorRef sender;
 
-    public ResponseReservation(String location, Office office, boolean succes, ActorRef sender) {
+    public ResponseAddToQueue(String location, Office office, ActorRef sender) {
         this.location = location;
         this.office = office;
-        this.succes = succes;
         this.sender = sender;
-    }
-
-    public boolean isSucces() {
-        return succes;
     }
 
     public ActorRef getSender() {

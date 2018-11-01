@@ -17,7 +17,10 @@ public class Main {
         ActorSystem system = ActorSystem.create("World");
 
         ActorRef customerService = system.actorOf(Props.create(CustomerService.class));
-        ActorRef tenant = system.actorOf(Props.create(Tenant.class, customerService));
+
+        for (int i = 0; i < 5; i++) {
+            system.actorOf(Props.create(Tenant.class, customerService));
+        }
     }
 
 

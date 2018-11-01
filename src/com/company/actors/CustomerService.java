@@ -10,11 +10,9 @@ import com.company.message.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 public class CustomerService extends AbstractLoggingActor {
     private HashMap<String, ActorRef> actorRefMap;
-    private List<Routee> routees;
     private Router router;
 
     @Override
@@ -23,7 +21,7 @@ public class CustomerService extends AbstractLoggingActor {
 
         createList();
 
-        routees = new ArrayList<>();
+        List<Routee> routees = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             ActorRef rentalAgent = getContext().actorOf(RentalAgent.prop(actorRefMap));
             getContext().watch(rentalAgent);
@@ -44,6 +42,16 @@ public class CustomerService extends AbstractLoggingActor {
                     router.route(message, getSender());
                 })
                 .match(RequestReservation.class, message -> {
+                    router.route(message, getSender());
+                })
+                .match(RequestBuyingOffice.class, message -> {
+                    message.setPayed(true);
+                    router.route(message, getSender());
+                })
+                .match(RequestAddToQueue.class, message -> {
+                    router.route(message, getSender());
+                })
+                .match(RequestRoomIsAvailableAgain.class, message -> {
                     router.route(message, getSender());
                 })
                 .build();

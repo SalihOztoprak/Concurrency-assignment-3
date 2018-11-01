@@ -40,7 +40,24 @@ public class RentalAgent extends AbstractLoggingActor {
                 })
                 .match(ResponseReservation.class, message -> {
                     message.getSender().tell(message,getSelf());
-                    log().info("I've send a response (Rental)");
+                })
+                .match(RequestBuyingOffice.class, message -> {
+                    actorRefMap.get(message.getLocation()).tell(message,getSelf());
+                })
+                .match(ResponseBuyingOffice.class, message -> {
+                    message.getSender().tell(message,getSelf());
+                })
+                .match(RequestAddToQueue.class, message -> {
+                    actorRefMap.get(message.getLocation()).tell(message,getSelf());
+                })
+                .match(ResponseAddToQueue.class, message -> {
+                    message.getSender().tell(message,getSelf());
+                })
+                .match(RequestRoomIsAvailableAgain.class, message -> {
+                    actorRefMap.get(message.getLocation()).tell(message,getSelf());
+                })
+                .match(ResponseRoomIsAvailableAgain.class, message -> {
+                    message.getSender().tell(message,getSelf());
                 })
                 .build();
     }

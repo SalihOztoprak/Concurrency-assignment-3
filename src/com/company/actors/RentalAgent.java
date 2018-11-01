@@ -29,15 +29,18 @@ public class RentalAgent extends AbstractLoggingActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(RequestReservation.class, message -> {
-                    actorRefMap.get(message.getLocation()).tell(new RequestRooms(getSender(), message.getRooms()), getSelf());
+                .match(RequestListOfRooms.class, message -> {
+                    actorRefMap.get(message.getLocation()).tell(message,getSelf());
                 })
-                .match(ResponseRooms.class, message -> {
-                    boolean bool = false;
-                    if (message.getAvailableRooms() >= message.getRequestedRooms()) {
-                        bool = true;
-                    }
-                    message.getSender().tell(new ResponseReservation(bool, getSender()), getSelf());
+                .match(ResponseListOfRooms.class, message -> {
+                    message.getSender().tell(message, getSelf());
+                })
+                .match(RequestReservation.class, message -> {
+                    actorRefMap.get(message.getLocation()).tell(message,getSelf());
+                })
+                .match(ResponseReservation.class, message -> {
+                    message.getSender().tell(message,getSelf());
+                    log().info("I've send a response (Rental)");
                 })
                 .build();
     }

@@ -6,7 +6,7 @@ public class RequestRooms {
     private ActorRef sender;
     private int requestedRooms;
 
-    public RequestRooms(ActorRef sender, int requestedRooms) {
+    public RequestRooms(ActorRef sender) {
         this.sender = sender;
         this.requestedRooms = requestedRooms;
     }

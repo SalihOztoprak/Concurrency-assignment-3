@@ -3,21 +3,17 @@ package com.company.message;
 import akka.actor.ActorRef;
 import com.company.Office;
 
-public class ResponseReservation {
+public class ResponseBuyingOffice {
     private String location;
     private Office office;
-    private boolean succes;
+    private boolean youGotTheRoom;
     private ActorRef sender;
 
-    public ResponseReservation(String location, Office office, boolean succes, ActorRef sender) {
+    public ResponseBuyingOffice(String location, Office office, boolean youGotTheRoom, ActorRef sender) {
         this.location = location;
         this.office = office;
-        this.succes = succes;
+        this.youGotTheRoom = youGotTheRoom;
         this.sender = sender;
-    }
-
-    public boolean isSucces() {
-        return succes;
     }
 
     public ActorRef getSender() {
@@ -30,5 +26,9 @@ public class ResponseReservation {
 
     public Office getOffice() {
         return office;
+    }
+
+    public boolean isYouGotTheRoom() {
+        return youGotTheRoom;
     }
 }

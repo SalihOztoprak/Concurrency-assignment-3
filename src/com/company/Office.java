@@ -2,17 +2,18 @@ package com.company;
 
 import akka.actor.ActorRef;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Office {
     private String name;
     private boolean isReserved;
-    private ArrayList<ActorRef> queue;
+    private Queue<ActorRef> queue;
 
     public Office(String name) {
         this.name = name;
         this.isReserved = false;
-        this.queue = new ArrayList<>();
+        this.queue = new LinkedList<>();
     }
 
     public String getName() {
@@ -23,7 +24,7 @@ public class Office {
         return isReserved;
     }
 
-    public ArrayList<ActorRef> getQueue() {
+    public Queue<ActorRef> getQueue() {
         return queue;
     }
 

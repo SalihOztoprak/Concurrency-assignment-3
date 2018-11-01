@@ -2,11 +2,14 @@ package com.company.actors;
 
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
+import akka.util.Timeout;
 import com.company.Office;
 import com.company.message.*;
+import scala.concurrent.duration.FiniteDuration;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Tenant extends AbstractLoggingActor {
     private ActorRef customerService;
@@ -18,14 +21,12 @@ public class Tenant extends AbstractLoggingActor {
     @Override
     public void preStart() throws Exception {
         super.preStart();
-        log().info("The customerservice is: " + customerService);
         requestLocations();
     }
 
     private void requestLocations() {
         log().info("Sending request to: " + customerService);
         customerService.tell(new RequestLocations(), getSelf());
-        log().info("Sent!");
     }
 
     @Override
@@ -33,18 +34,33 @@ public class Tenant extends AbstractLoggingActor {
         return receiveBuilder()
                 .match(ResponseLocations.class, message -> {
                     log().info(Arrays.toString(message.getLocations()));
-                    getSender().tell(new RequestListOfRooms(getRandomLocation(message.getLocations()), getSelf()), getSelf());
+                    customerService.tell(new RequestListOfRooms(getRandomLocation(message.getLocations()), getSelf()), getSelf());
                 })
                 .match(ResponseListOfRooms.class, message -> {
                     log().info(Arrays.toString(message.getOffices()));
-                    getSender().tell(new RequestReservation(message.getLocation(), getRandomOffice(message.getOffices()), getSender()), getSelf());
+                    customerService.tell(new RequestReservation(message.getLocation(), getRandomOffice(message.getOffices()), getSelf()), getSelf());
                 })
                 .match(ResponseReservation.class, message -> {
                     if (message.isSucces()) {
-                        log().info("WOHOO I have a room");
+                        boolean iWantToBuyThisOffice = new Random().nextBoolean();
+                        customerService.tell(new RequestBuyingOffice(message.getLocation(), message.getOffice(), iWantToBuyThisOffice, getSelf()), getSelf());
                     } else {
-                        log().info("Ahh no room for me");
+                        boolean iWantToBeInTheQueue = new Random().nextBoolean();
+                        customerService.tell(new RequestAddToQueue(message.getLocation(), message.getOffice(), iWantToBeInTheQueue, getSelf()), getSelf());
                     }
+                })
+                .match(ResponseBuyingOffice.class, message -> {
+                    log().info("I have bought a room");
+                    //Tenant now has the room and will use it (wait)
+                    TimeUnit.SECONDS.sleep(new Random().nextInt(50)+10);
+                    customerService.tell(new RequestRoomIsAvailableAgain(message.getLocation(), message.getOffice(), getSelf()), getSelf());
+                })
+                .match(ResponseRoomIsAvailableAgain.class, message -> {
+                    log().info("I have returned my room");
+                    log().info("I have to pay €" + message.getMoneyToPay());
+                    //Tenant will wait again before reserving new room
+                    TimeUnit.SECONDS.sleep(new Random().nextInt(50)+10);
+                    requestLocations();
                 })
                 .build();
     }

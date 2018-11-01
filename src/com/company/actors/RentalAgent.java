@@ -18,6 +18,8 @@ public class RentalAgent extends AbstractLoggingActor {
     public void preStart() throws Exception {
         super.preStart();
 
+
+
     }
 
     public static Props prop(HashMap<String, ActorRef> map) {

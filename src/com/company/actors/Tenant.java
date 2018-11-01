@@ -35,7 +35,8 @@ public class Tenant extends AbstractLoggingActor {
         return receiveBuilder()
                 .match(ResponseLocations.class, msg -> {
                     log().info(Arrays.toString(msg.getLocations()));
-                    getSender().tell(new RequestReservation(getRandomLocation(msg.getLocations()),new Random().nextInt(3)+1),getSelf());
+                    getSender().tell(new RequestReservation(getRandomLocation(msg.getLocations()),
+                            new Random().nextInt(3)+1),getSelf());
                     log().info("I've sent a request to " + getSender());
                 })
                 .match(ResponseReservation.class, msg -> {

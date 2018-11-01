@@ -5,10 +5,7 @@ import akka.routing.ActorRefRoutee;
 import akka.routing.RoundRobinRoutingLogic;
 import akka.routing.Routee;
 import akka.routing.Router;
-import com.company.message.RequestLocations;
-import com.company.message.RequestReservation;
-import com.company.message.ResponseLocations;
-import com.company.message.ResponseReservation;
+import com.company.message.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,17 +36,15 @@ public class CustomerService extends AbstractLoggingActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(RequestLocations.class, message -> {
-                    log().info("Routing message :" + message);
                     router.route(message, getSender());
                     String[] locations = getLocations();
                     getSender().tell(new ResponseLocations(locations), getSelf());
                 })
-                .match(RequestReservation.class, message -> {
-                    router.route(message,getSelf());
-//                    routees.get(new Random().nextInt(5)).send(message, getSelf());
+                .match(RequestListOfRooms.class, message -> {
+                    router.route(message, getSender());
                 })
-                .match(ResponseReservation.class, msg -> {
-                    msg.getSender().tell(msg,getSender());
+                .match(RequestReservation.class, message -> {
+                    router.route(message, getSender());
                 })
                 .build();
     }

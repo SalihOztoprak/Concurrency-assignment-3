@@ -2,10 +2,8 @@ package com.company.actors;
 
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
-import com.company.message.RequestLocations;
-import com.company.message.RequestReservation;
-import com.company.message.ResponseLocations;
-import com.company.message.ResponseReservation;
+import com.company.Office;
+import com.company.message.*;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -33,18 +31,29 @@ public class Tenant extends AbstractLoggingActor {
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(ResponseLocations.class, msg -> {
-                    log().info(Arrays.toString(msg.getLocations()));
-                    getSender().tell(new RequestReservation(getRandomLocation(msg.getLocations()),new Random().nextInt(3)+1),getSelf());
-                    log().info("I've sent a request to " + getSender());
+                .match(ResponseLocations.class, message -> {
+                    log().info(Arrays.toString(message.getLocations()));
+                    getSender().tell(new RequestListOfRooms(getRandomLocation(message.getLocations()), getSelf()), getSelf());
                 })
-                .match(ResponseReservation.class, msg -> {
-                    log().info("Can I get the room: " + msg.isSucces());
+                .match(ResponseListOfRooms.class, message -> {
+                    log().info(Arrays.toString(message.getOffices()));
+                    getSender().tell(new RequestReservation(message.getLocation(), getRandomOffice(message.getOffices()), getSender()), getSelf());
+                })
+                .match(ResponseReservation.class, message -> {
+                    if (message.isSucces()) {
+                        log().info("WOHOO I have a room");
+                    } else {
+                        log().info("Ahh no room for me");
+                    }
                 })
                 .build();
     }
 
     private String getRandomLocation(String[] locations) {
         return locations[new Random().nextInt(locations.length)];
+    }
+
+    private Office getRandomOffice(Office[] offices) {
+        return offices[new Random().nextInt(offices.length)];
     }
 }

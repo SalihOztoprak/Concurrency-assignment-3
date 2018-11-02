@@ -10,6 +10,10 @@ public class LocationAgent extends AbstractLoggingActor {
     private String city;
     private HashMap<String,Office> offices;
 
+    /**
+     *
+     * @param city of the location agent
+     */
     public LocationAgent(String city) {
         this.city = city;
         this.offices = new HashMap<>();
@@ -61,6 +65,10 @@ public class LocationAgent extends AbstractLoggingActor {
                 .build();
     }
 
+    /**
+     * get the offices
+     * @return the offices
+     */
     private String[] getOffices() {
         List<String> list = new ArrayList<>(offices.keySet());
 

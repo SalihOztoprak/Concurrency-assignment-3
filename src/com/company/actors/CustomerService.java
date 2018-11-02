@@ -15,6 +15,10 @@ public class CustomerService extends AbstractLoggingActor {
     private HashMap<String, ActorRef> actorRefMap;
     private Router router;
 
+    /**
+     *
+     * @throws Exception
+     */
     @Override
     public void preStart() throws Exception {
         super.preStart();
@@ -30,6 +34,10 @@ public class CustomerService extends AbstractLoggingActor {
         router = new Router(new RoundRobinRoutingLogic(), routees);
     }
 
+    /**
+     *
+     * @return the message
+     */
     @Override
     public Receive createReceive() {
         return receiveBuilder()
@@ -56,6 +64,9 @@ public class CustomerService extends AbstractLoggingActor {
                 .build();
     }
 
+    /**
+     * Create a list of locations
+     */
     private void createList() {
         actorRefMap = new HashMap<>();
         actorRefMap.put("Enschede", getContext().getSystem().actorOf(Props.create(LocationAgent.class, "Enschede")));
@@ -65,6 +76,10 @@ public class CustomerService extends AbstractLoggingActor {
         actorRefMap.put("Goor", getContext().getSystem().actorOf(Props.create(LocationAgent.class, "Goor")));
     }
 
+    /**
+     * get the locations
+     * @return the locations
+     */
     private String[] getLocations() {
         List<String> list = new ArrayList<>(actorRefMap.keySet());
 

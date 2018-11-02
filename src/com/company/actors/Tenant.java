@@ -2,7 +2,6 @@ package com.company.actors;
 
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
-import com.company.Office;
 import com.company.message.*;
 
 import java.util.Arrays;
@@ -11,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Tenant extends AbstractLoggingActor {
     private ActorRef customerService;
+
 
     public Tenant(ActorRef customerService) {
         this.customerService = customerService;
@@ -22,6 +22,9 @@ public class Tenant extends AbstractLoggingActor {
         requestLocations();
     }
 
+    /**
+     * send a request of locations to the customer service
+     */
     private void requestLocations() {
         log().info("Sending request to: " + customerService);
         customerService.tell(new RequestLocations(), getSelf());
@@ -63,10 +66,20 @@ public class Tenant extends AbstractLoggingActor {
                 .build();
     }
 
+    /**
+     * get a random location
+     * @param locations list of locations
+     * @return a random location
+     */
     private String getRandomLocation(String[] locations) {
         return locations[new Random().nextInt(locations.length)];
     }
 
+    /**
+     * get a random office
+     * @param offices list of offices
+     * @return a random office
+     */
     private String getRandomOffice(String[] offices) {
         return offices[new Random().nextInt(offices.length)];
     }

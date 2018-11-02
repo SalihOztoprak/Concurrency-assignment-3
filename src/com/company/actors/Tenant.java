@@ -2,10 +2,8 @@ package com.company.actors;
 
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
-import akka.util.Timeout;
 import com.company.Office;
 import com.company.message.*;
-import scala.concurrent.duration.FiniteDuration;
 
 import java.util.Arrays;
 import java.util.Random;

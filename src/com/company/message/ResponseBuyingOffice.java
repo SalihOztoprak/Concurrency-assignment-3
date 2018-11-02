@@ -5,14 +5,12 @@ import com.company.Office;
 
 public class ResponseBuyingOffice {
     private String location;
-    private Office office;
-    private boolean youGotTheRoom;
+    private String office;
     private ActorRef sender;
 
-    public ResponseBuyingOffice(String location, Office office, boolean youGotTheRoom, ActorRef sender) {
+    public ResponseBuyingOffice(String location, String office, ActorRef sender) {
         this.location = location;
         this.office = office;
-        this.youGotTheRoom = youGotTheRoom;
         this.sender = sender;
     }
 
@@ -24,11 +22,7 @@ public class ResponseBuyingOffice {
         return location;
     }
 
-    public Office getOffice() {
+    public String getOffice() {
         return office;
-    }
-
-    public boolean isYouGotTheRoom() {
-        return youGotTheRoom;
     }
 }

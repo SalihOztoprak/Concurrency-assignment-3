@@ -45,7 +45,6 @@ public class CustomerService extends AbstractLoggingActor {
                     router.route(message, getSender());
                 })
                 .match(RequestBuyingOffice.class, message -> {
-                    message.setPayed(true);
                     router.route(message, getSender());
                 })
                 .match(RequestAddToQueue.class, message -> {

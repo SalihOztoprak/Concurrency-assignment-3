@@ -67,7 +67,7 @@ public class Tenant extends AbstractLoggingActor {
         return locations[new Random().nextInt(locations.length)];
     }
 
-    private Office getRandomOffice(Office[] offices) {
+    private String getRandomOffice(String[] offices) {
         return offices[new Random().nextInt(offices.length)];
     }
 }

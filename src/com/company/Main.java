@@ -1,5 +1,4 @@
 package com.company;
-//TODO make variables final
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;

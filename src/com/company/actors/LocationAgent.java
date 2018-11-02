@@ -4,18 +4,18 @@ import akka.actor.AbstractLoggingActor;
 import com.company.Office;
 import com.company.message.*;
 
-import java.util.Random;
+import java.util.*;
 
 public class LocationAgent extends AbstractLoggingActor {
     private String city;
-    private Office[] offices;
+    private HashMap<String,Office> offices;
 
     public LocationAgent(String city) {
         this.city = city;
-        this.offices = new Office[new Random().nextInt(20) + 5];
+        this.offices = new HashMap<>();
 
-        for (int i = 0; i < offices.length; i++) {
-            offices[i] = new Office("Office " + i);
+        for (int i = 0; i < new Random().nextInt(20) + 5; i++) {
+            offices.put("Office " + i,new Office("Office " + i));
         }
     }
 
@@ -23,10 +23,11 @@ public class LocationAgent extends AbstractLoggingActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(RequestListOfRooms.class, message -> {
-                    getSender().tell(new ResponseListOfRooms(offices, city, message.getSender()), getSelf());
+                    String[] officesString = getOffices();
+                    getSender().tell(new ResponseListOfRooms(officesString, city, message.getSender()), getSelf());
                 })
                 .match(RequestReservation.class, message -> {
-                    Office office = message.getOffice();
+                    Office office = offices.get(message.getOffice());
                     boolean isSucces = false;
                     if (!office.isReserved()) {
                         isSucces = true;
@@ -34,30 +35,40 @@ public class LocationAgent extends AbstractLoggingActor {
                     getSender().tell(new ResponseReservation(message.getLocation(), message.getOffice(), isSucces, message.getSender()), getSelf());
                 })
                 .match(RequestBuyingOffice.class, message -> {
+                    Office office = offices.get(message.getOffice());
                     if (message.iWantToBuyThisOffice()) {
-                        boolean youGotTheRoom = false;
-                        if (message.isPayed()) {
-                            message.getOffice().setReserved(true);
-                            youGotTheRoom = true;
-                        }
-                        getSender().tell(new ResponseBuyingOffice(message.getLocation(), message.getOffice(), youGotTheRoom, message.getSender()), getSelf());
+                        office.setReserved(true);
+                        getSender().tell(new ResponseBuyingOffice(message.getLocation(), message.getOffice(), message.getSender()), getSelf());
                     }
                 })
                 .match(RequestAddToQueue.class, message -> {
+                    Office office = offices.get(message.getOffice());
                     if (message.iWantToBeInTheQueue()) {
-                        message.getOffice().addToQueue(message.getSender());
+                        office.addToQueue(message.getSender());
                         getSender().tell(new ResponseAddToQueue(message.getLocation(), message.getOffice(), message.getSender()), getSelf());
                     }
                 })
                 .match(RequestRoomIsAvailableAgain.class, message -> {
+                    Office office = offices.get(message.getOffice());
                     getSender().tell(new ResponseRoomIsAvailableAgain(new Random().nextInt(30) + 10, message.getSender()), getSelf());
-                    if (!message.getOffice().getQueue().isEmpty()) {
-                        message.getOffice().getQueue().peek().tell(new ResponseReservation(message.getLocation(), message.getOffice(), true, message.getOffice().getQueue().peek()), getSelf());
-                        message.getOffice().getQueue().poll();
+                    if (!office.getQueue().isEmpty()) {
+                        office.getQueue().peek().tell(new ResponseReservation(message.getLocation(), message.getOffice(), true, office.getQueue().peek()), getSelf());
+                        office.getQueue().poll();
                     } else {
-                        message.getOffice().setReserved(false);
+                        office.setReserved(false);
                     }
                 })
                 .build();
+    }
+
+    private String[] getOffices() {
+        List<String> list = new ArrayList<>(offices.keySet());
+
+        String[] offices = new String[list.size()];
+        for (int i = 0; i < offices.length; i++) {
+            offices[i] = list.get(i);
+        }
+
+        return offices;
     }
 }

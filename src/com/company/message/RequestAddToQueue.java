@@ -5,11 +5,11 @@ import com.company.Office;
 
 public class RequestAddToQueue {
     private String location;
-    private Office office;
+    private String office;
     private boolean iWantToBeInTheQueue;
     private ActorRef sender;
 
-    public RequestAddToQueue(String location, Office office, boolean iWantToBeInTheQueue, ActorRef sender) {
+    public RequestAddToQueue(String location, String office, boolean iWantToBeInTheQueue, ActorRef sender) {
         this.location = location;
         this.office = office;
         this.iWantToBeInTheQueue = iWantToBeInTheQueue;
@@ -28,7 +28,7 @@ public class RequestAddToQueue {
         return location;
     }
 
-    public Office getOffice() {
+    public String getOffice() {
         return office;
     }
 }

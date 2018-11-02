@@ -5,11 +5,11 @@ import com.company.Office;
 
 public class ResponseReservation {
     private String location;
-    private Office office;
+    private String office;
     private boolean succes;
     private ActorRef sender;
 
-    public ResponseReservation(String location, Office office, boolean succes, ActorRef sender) {
+    public ResponseReservation(String location, String office, boolean succes, ActorRef sender) {
         this.location = location;
         this.office = office;
         this.succes = succes;
@@ -28,7 +28,7 @@ public class ResponseReservation {
         return location;
     }
 
-    public Office getOffice() {
+    public String getOffice() {
         return office;
     }
 }

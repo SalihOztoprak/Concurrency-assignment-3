@@ -2,10 +2,8 @@ package com.company.actors;
 
 import akka.actor.AbstractLoggingActor;
 import akka.actor.ActorRef;
-import akka.util.Timeout;
 import com.company.Office;
 import com.company.message.*;
-import scala.concurrent.duration.FiniteDuration;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -69,7 +67,7 @@ public class Tenant extends AbstractLoggingActor {
         return locations[new Random().nextInt(locations.length)];
     }
 
-    private Office getRandomOffice(Office[] offices) {
+    private String getRandomOffice(String[] offices) {
         return offices[new Random().nextInt(offices.length)];
     }
 }
